@@ -18,10 +18,10 @@ public class Vista extends Frame
 	Image you;
 	Image btnSelectA, btnSelectB, btnSelectC, btnNext;
 	Image btnReplaceA, btnReplaceB, btnReplaceC;
-	Image blurrL1, blurrL2, blurrL3; //cuando te queden pocas 1, 2 o 3 cucharas.
+	Image blurrL1, blurrL2, blurrL3;
 	Image spoons;
 	
-	String optionA = "Wake up", optionB = "Wake up", optionC = "Wake up";
+	String optionA   = "Wake up", optionB = "Wake up", optionC = "Wake up";
 	String newOption = "...";
 	
 	Toolkit herramienta;
@@ -40,7 +40,7 @@ public class Vista extends Frame
 		add(txtStimuli);
 		
 		herramienta = getToolkit();
-		you = herramienta.getImage("images\\asleep.png");
+		you 		= herramienta.getImage("images\\asleep.png");
 		
 		btnSelectA = herramienta.getImage("images\\selectA.png");
 		btnSelectB = herramienta.getImage("images\\selectB.png");
@@ -51,7 +51,7 @@ public class Vista extends Frame
 		btnReplaceC = herramienta.getImage("images\\replaceC.png");
 		
 		btnNext = herramienta.getImage("images\\next.png");
-		spoons = herramienta.getImage("images\\spoons5.png");
+		spoons  = herramienta.getImage("images\\spoons5.png");
 		
 		//eliminar cuando hagas menú
 		setVisible(true);
