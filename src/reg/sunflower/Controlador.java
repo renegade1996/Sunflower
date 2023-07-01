@@ -165,75 +165,45 @@ public class Controlador implements WindowListener, MouseListener
 						}
 						else if(counterStoryLine == 1)
 						{
-							if(vista.optionA.equals(vista.allOptions[0]) && vista.optionB.equals(vista.allOptions[0]) && vista.optionC.equals(vista.allOptions[0]))
-							{
-								gameOver();
-								vista.message1 = "Well, it looks like you're broken forever.";
-							}
-							else
-							{
-								counterStoryLine++;
-								vista.txtEvent.setText("You do nothing. Time goes by. You feel desperately lonely. It takes 1 spoon. You see your cat.");
-								counterSpoons--;
-							}
+							vista.txtEvent.setText("You do nothing. Time goes by. You feel desperately lonely. It takes 1 spoon.");
+							counterSpoons--;
 						}
 						else if(counterStoryLine == 2)
 						{
-							if(vista.optionA.equals(vista.allOptions[0]) && vista.optionB.equals(vista.allOptions[0]) && vista.optionC.equals(vista.allOptions[0]))
+							if(counterCoffee > 1)
 							{
-								gameOver();
-								vista.message1 = "Well, it looks like you're broken forever.";
-							}
-							else if(counterCoffee > 1)
-							{
-								counterStoryLine++;
-								vista.txtEvent.setText("You do nothing. Your heart is still racing. It takes 1 spoon. You go outside.");
+								vista.txtEvent.setText("You do nothing. Your heart is still racing. You're so lonely. It takes 1 spoon.");
 								counterSpoons--;
 							}
 							else
 							{
-								counterStoryLine++;
-								vista.txtEvent.setText("You do nothing. Time goes by. You feel desperately bored and lonely. It takes 1 spoon. You go outside.");
+								vista.txtEvent.setText("You do nothing. Time goes by. You feel desperately bored and lonely. It takes 1 spoon.");
 								counterSpoons--;
 							}
 						}
 						else if(counterStoryLine == 3)
 						{
-							if(vista.optionA.equals(vista.allOptions[0]) && vista.optionB.equals(vista.allOptions[0]) && vista.optionC.equals(vista.allOptions[0]))
+							if(counterCoffee > 1)
 							{
-								gameOver();
-								vista.message1 = "Well, it looks like you're broken forever.";
-							}
-							else if(counterCoffee > 1)
-							{
-								counterStoryLine++;
-								vista.txtEvent.setText("You do nothing. Your heart is still racing. It takes 1 spoon. You go outside.");
+								vista.txtEvent.setText("You do nothing. Your heart is still racing. It takes 1 spoon. There's a lot of traffic and it's stressful. Move or something?");
 								counterSpoons--;
 							}
 							else
 							{
-								counterStoryLine++;
-								vista.txtEvent.setText("You do nothing. Time goes by. You feel desperately lonely. It takes 1 spoon. You go outside.");
+								vista.txtEvent.setText("You do nothing. There's a lot of traffic and it's stressful. You're paralised. It takes 1 spoon. Move or something?");
 								counterSpoons--;
 							}
 						}
 						else if(counterStoryLine == 4)
 						{
-							if(vista.optionA.equals(vista.allOptions[0]) && vista.optionB.equals(vista.allOptions[0]) && vista.optionC.equals(vista.allOptions[0]))
+							if(counterCoffee > 1)
 							{
-								gameOver();
-								vista.message1 = "Well, it looks like you're broken forever.";
-							}
-							else if(counterCoffee > 1)
-							{
-								counterStoryLine++;
-								vista.txtEvent.setText("You do nothing. Your heart is still racing. It takes 1 spoon. There's a lot of traffic.");
+								vista.txtEvent.setText("You do nothing. Your heart is still racing. It takes 1 spoon. What now?");
 								counterSpoons--;
 							}
 							else
 							{
-								counterStoryLine++;
-								vista.txtEvent.setText("You do nothing. You wonder why you went outside. It takes 1 spoon. There's a lot of traffic.");
+								vista.txtEvent.setText("You do nothing. You wonder why you went outside. It takes 1 spoon. What now?");
 								counterSpoons--;
 							}
 						}
@@ -444,10 +414,12 @@ public class Controlador implements WindowListener, MouseListener
 			else if(counterSpoons == 1)
 			{
 				vista.spoons = vista.herramienta.getImage("Images\\spoons1.png");
-				//new dodge game
 			}
 			else if(counterSpoons < 1)
 			{
+				//new dodge game.
+				//if not wake up option available:
+				//counterCoffee = 0;
 				gameOver();
 				vista.message1 = "You are physically incapable of doing anything about this anymore.";
 			}

@@ -18,7 +18,7 @@ public class Vista extends Frame
 {
 	private static final long serialVersionUID = 1L;
 	
-	TextField txtEvent = new TextField(85);
+	TextField txtEvent = new TextField(95);
 	TextArea txtOptions = new TextArea(5,50);
 	
 	Image btnReplaceA, btnReplaceB, btnReplaceC;
@@ -47,7 +47,7 @@ public class Vista extends Frame
 	
 	public Vista()
 	{
-		setTitle("Sunflower");
+		setTitle("Sunflower Brain");
 		setLayout(new FlowLayout(FlowLayout.CENTER,380,20));
 		setSize(1200,760);
 		setBackground(Color.black);
