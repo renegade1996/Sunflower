@@ -18,7 +18,7 @@ public class Vista extends Frame
 {
 	private static final long serialVersionUID = 1L;
 	
-	TextField txtEvent = new TextField(95);
+	TextField txtEvent = new TextField(140);
 	TextArea txtOptions = new TextArea(5,50);
 	
 	Image btnReplaceA, btnReplaceB, btnReplaceC;
@@ -31,7 +31,7 @@ public class Vista extends Frame
 	AudioFileFormat aff;
 	AudioInputStream ais;
 	
-	String allOptions[]   = {"...", "Wake up", "Interact", "Ignore", "Drink water", "Leave", "Wear headphones", "Take a painkiller", "Stim"};
+	String allOptions[]   = {"...", "Wake up", "Interact", "Ignore", "Drink water", "Wear headphones"};
 	String newOptionTitle = "N E W  O P T I O N  A V A I L A B L E";
 	
 	//initial values
@@ -56,7 +56,7 @@ public class Vista extends Frame
 		
 		txtEvent.setEditable(false);
 		txtEvent.setBackground(Color.yellow);
-		txtEvent.setText("You are sleeping.");
+		txtEvent.setText("ZzZZzZZzZZzZZzZZzZZzZzzzzzzzzzzzzz.... You are sleeping.");
 		add(txtEvent);
 		
 		txtOptions.setEditable(false);
