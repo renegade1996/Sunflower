@@ -24,8 +24,7 @@ public class Vista extends Frame
 	Image btnReplaceA, btnReplaceB, btnReplaceC;
 	Image btnSelectA, btnSelectB, btnSelectC;
 	Image btnNext, btnExit, btnReshuffle;
-	Image spoons;
-	Image you;
+	Image house, spoons, you;
 
 	File errorSoundFile = new File("sounds\\error.wav");
 	File goingHome		= new File("sounds\\goingHome.wav");
@@ -48,9 +47,10 @@ public class Vista extends Frame
 
 	//mini game
 	Boolean miniGame = false;
-	String movements = "";
 	
-	int posYouX = 400, posYouY = 250;
+	int posYouX  = 400, posYouY  = 250;
+	int posYMsg1 = 250, posYMsg2 = 320, posXMsg2 = 540;
+	int wallDown = 200; 
 
 	Toolkit herramienta;
 
@@ -74,6 +74,7 @@ public class Vista extends Frame
 
 		herramienta = getToolkit();
 		you 		= herramienta.getImage("images\\asleep.png");
+		house		= herramienta.getImage("Images\\house.png");
 
 		btnSelectA = herramienta.getImage("images\\selectA.png");
 		btnSelectB = herramienta.getImage("images\\selectB.png");
@@ -128,15 +129,19 @@ public class Vista extends Frame
 		g.setFont(calibriG);
 
 		g.setColor(Color.white);
-		g.drawString(message1, 190, 250);
+		g.drawString(message1, 190, posYMsg1);
 		g.setColor(Color.red);
-		g.drawString(message2, 540, 320);
+		g.drawString(message2, posXMsg2, posYMsg2);
 
 		if(miniGame)
 		{
 			g.setFont(calibriB);
-			g.setColor(Color.yellow);
-			g.drawString("Maps App says: " + movements, 540, 320);
+			g.setColor(Color.red);
+			
+			g.fillRect(830, 40, 30, wallDown);
+			g.fillRect(830, 740, 30, 200);
+			
+			g.drawImage(house, 850, 250, this);
 		}
 	}
 }

@@ -24,6 +24,10 @@ public class Controlador implements WindowListener, MouseListener, KeyListener
 	//Variables
 	Boolean op1 = false, op2 = false, op3 = false;
 
+	Boolean hasSpoon = false;
+	Boolean win 	 = false;
+	Boolean endMusic = false;
+
 	String  opSelected = "";
 	Random  random	   = new Random();
 
@@ -48,7 +52,7 @@ public class Controlador implements WindowListener, MouseListener, KeyListener
 		int x = e.getX();
 		int y = e.getY();
 
-		//System.out.println(x+"-"+y);
+		System.out.println(x+"-"+y);
 
 		if(vista.isActive()&&!(vista.gameOver))
 		{
@@ -186,6 +190,10 @@ public class Controlador implements WindowListener, MouseListener, KeyListener
 							vista.txtEvent.setText("You do nothing. You seem paralised. The public sees. Do something?");
 							counterSpoons-=2;
 						}
+						else if(counterStoryLine == 7)
+						{
+							System.exit(0);
+						}
 						break;
 
 					case "Wake up":
@@ -249,6 +257,11 @@ public class Controlador implements WindowListener, MouseListener, KeyListener
 								vista.message1 = "I warned you???????";
 							}
 						}
+						else if(counterStoryLine == 7)
+						{
+							vista.message1 = "You made it.";
+							vista.message1 = "You woke up one more day.";
+						}
 						else if(counterStoryLine == 5)
 						{
 							counterStoryLine++;
@@ -267,6 +280,7 @@ public class Controlador implements WindowListener, MouseListener, KeyListener
 								gameOver();
 								vista.message1 = "I warned you???????";
 							}
+
 							counterSpoons  = 1;
 
 						}
@@ -292,6 +306,14 @@ public class Controlador implements WindowListener, MouseListener, KeyListener
 							{
 								miniGame();
 							}
+						}
+						else if(counterStoryLine == 7)
+						{
+							vista.message1 = "You made it.";
+							vista.message2 = "you woke up one more day";
+
+							win = true;
+							gameOver();
 						}
 						break;
 
@@ -332,6 +354,10 @@ public class Controlador implements WindowListener, MouseListener, KeyListener
 							vista.txtEvent.setText("Someone asks for directions on your way home. You didn't prepare for this. You make an effort to interact but words don't come out right. You're extremely anxious and disoriented. GO HOME RIGHT NOW.");
 							miniGame();
 						}
+						else if(counterStoryLine == 7)
+						{
+							System.exit(0);
+						}
 						break;
 
 					case "Ignore":
@@ -370,6 +396,10 @@ public class Controlador implements WindowListener, MouseListener, KeyListener
 						{
 							vista.txtEvent.setText("Someone asks for directions on your way home. You didn't prepare for this. You make an effort to interact but words don't come out right. You're extremely anxious and disoriented. GO HOME RIGHT NOW.");
 							miniGame();
+						}
+						else if(counterStoryLine == 7)
+						{
+							System.exit(0);
 						}
 						break;
 
@@ -459,6 +489,10 @@ public class Controlador implements WindowListener, MouseListener, KeyListener
 							}
 							miniGame();
 						}
+						else if(counterStoryLine == 7)
+						{
+							System.exit(0);
+						}
 						break;
 
 					case "Wear headphones":
@@ -529,6 +563,10 @@ public class Controlador implements WindowListener, MouseListener, KeyListener
 						{
 							vista.txtEvent.setText("You wear your headphones on your way home but it doesn't help. It's too warm, there's a lot of traffic and your senses are confused. You are extremely overstimulated and disoriented.");
 							miniGame();
+						}
+						else if(counterStoryLine == 7)
+						{
+							System.exit(0);
 						}
 						break;
 					}
@@ -673,7 +711,10 @@ public class Controlador implements WindowListener, MouseListener, KeyListener
 
 		vista.remove(vista.txtOptions);
 
-		vista.message2 = "GAME 	OVER";
+		if(!win)
+		{
+			vista.message2 = "GAME 	OVER";
+		}
 		vista.btnExit  = vista.herramienta.getImage("images\\exit.png");
 
 		vista.repaint();
@@ -684,14 +725,12 @@ public class Controlador implements WindowListener, MouseListener, KeyListener
 	{
 		//window
 		vista.miniGame = true;
-		vista.txtOptions.setText("ATTENTION: You are at your limit.\n\nPRESS UP/DOWN/LEFT/RIGHT KEYS\nTo make your way home.");
+		vista.txtOptions.setText("ATTENTION: You are at your limit.\n\nUse the KEYBOARD to move,\nGRAB your last spoon with INTRO, and run home.");
 
 		vista.removeMouseListener(this);
 		vista.addKeyListener(this);
 
 		vista.gameOver = true;
-
-		vista.posYouY = 470;
 
 		vista.btnSelectA = vista.herramienta.getImage("");
 		vista.btnSelectB = vista.herramienta.getImage("");
@@ -711,6 +750,7 @@ public class Controlador implements WindowListener, MouseListener, KeyListener
 		vista.requestFocusInWindow();
 
 		//background music
+
 		try
 		{
 			vista.affM = AudioSystem.getAudioFileFormat(vista.goingHome);
@@ -721,6 +761,11 @@ public class Controlador implements WindowListener, MouseListener, KeyListener
 			Clip ol = (Clip) AudioSystem.getLine(info);
 			ol.open(vista.aisM);
 			ol.loop(Clip.LOOP_CONTINUOUSLY); //()number of reproductions or (Clip.LOOP_CONTINUOUSLY)
+			
+			if(endMusic)
+			{
+				ol.close();
+			}
 		}
 		catch(UnsupportedAudioFileException ee)
 		{
@@ -774,67 +819,67 @@ public class Controlador implements WindowListener, MouseListener, KeyListener
 		//your movements
 		if(keyCode == KeyEvent.VK_LEFT)
 		{
-			if(vista.posYouX > 100)
+			if(vista.posYouX > 50)
 			{
-				vista.posYouX -= 300;
+				vista.posYouX-=8;
+				vista.wallDown+=3;
 			}
-			checkPos();
 		}
 		if(keyCode == KeyEvent.VK_RIGHT)
 		{
 			if(vista.posYouX < 700)
 			{
-				vista.posYouX += 300;
+				vista.posYouX+=8;
+				vista.wallDown+=3;
 			}
-			checkPos();
+			if(hasSpoon && (vista.posYouX > 650 && vista.posYouX < 701))
+			{
+				vista.posXMsg2 = 190;
+				vista.posYMsg1 = 350;
+				vista.posYMsg2 = 400;
+				vista.message1 = "Oh, did that red line make you rush? It doesn't really do anything...";
+				vista.message2 = "There's only one way to win this game. Can you still WAKE UP?";
+
+				//restore window
+				vista.addMouseListener(this);
+				endMusic = true;
+				
+				vista.miniGame 	 = false;
+				vista.btnNext    = vista.herramienta.getImage("Images\\next.png");
+				vista.btnSelectA = vista.herramienta.getImage("Images\\selectA.png");
+				vista.btnSelectB = vista.herramienta.getImage("Images\\selectB.png");
+				vista.btnSelectC = vista.herramienta.getImage("Images\\selectC.png");
+
+				vista.txtOptions.setText("A) "+vista.optionA+"\nB) "+vista.optionB+"\nC) "+vista.optionC);
+				counterStoryLine++;
+			}
 		}
 		if(keyCode == KeyEvent.VK_UP)
 		{
 			if(vista.posYouY > 250)
 			{
-				vista.posYouY -= 300;
+				vista.posYouY-=8;
+				vista.wallDown+=3;
 			}
-			checkPos();
 		}
 		if(keyCode == KeyEvent.VK_DOWN)
 		{
 			if(vista.posYouY < 451)
 			{
-				vista.posYouY += 300;
+				vista.posYouY+=8;
+				vista.wallDown+=3;
 			}
-			checkPos();
+		}
+		if((keyCode == KeyEvent.VK_ENTER) && (vista.posYouX > 10 && vista.posYouX < 200)&&(vista.posYouY > 350 && vista.posYouY < 680))
+		{
+			vista.spoons = vista.herramienta.getImage("");
+			vista.you = vista.herramienta.getImage("Images\\youWSpoon.png");
+
+			hasSpoon = true;
 		}
 		vista.repaint();
 	}
 
-	private void checkPos()
-	{
-		if(vista.posYouX == 100 && vista.posYouY == 170)
-		{
-			
-			System.out.println("pos1");
-		}
-		else if(vista.posYouX == 100 && vista.posYouY == 470)
-		{
-			System.out.println("pos2");
-		}
-		else if(vista.posYouX == 400 && vista.posYouY == 170)
-		{
-			System.out.println("pos3");
-		}
-		else if(vista.posYouX == 400 && vista.posYouY == 470)
-		{
-			System.out.println("pos4");
-		}
-		else if(vista.posYouX == 700 && vista.posYouY == 170)
-		{
-			System.out.println("pos5");
-		}
-		else if(vista.posYouX == 700 && vista.posYouY == 470)
-		{
-			System.out.println("pos6");
-		}
-	}
 	@Override
 	public void keyReleased(KeyEvent e){}
 }
