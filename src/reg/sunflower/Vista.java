@@ -17,34 +17,43 @@ import javax.sound.sampled.AudioInputStream;
 public class Vista extends Frame
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	TextField txtEvent = new TextField(140);
 	TextArea txtOptions = new TextArea(5,50);
-	
+
 	Image btnReplaceA, btnReplaceB, btnReplaceC;
 	Image btnSelectA, btnSelectB, btnSelectC;
 	Image btnNext, btnExit, btnReshuffle;
 	Image spoons;
 	Image you;
-	
+
 	File errorSoundFile = new File("sounds\\error.wav");
-	AudioFileFormat aff;
-	AudioInputStream ais;
-	
+	File goingHome		= new File("sounds\\goingHome.wav");
+	AudioFileFormat  affE;
+	AudioInputStream aisE;
+	AudioFileFormat  affM;
+	AudioInputStream aisM;
+
 	String allOptions[]   = {"...", "Wake up", "Interact", "Ignore", "Drink water", "Wear headphones"};
 	String newOptionTitle = "N E W  O P T I O N  A V A I L A B L E";
-	
+
 	//initial values
 	String optionA      = allOptions[1], optionB = allOptions[1], optionC = allOptions[1];
 	String newOption    = allOptions[0];
-	
+
 	Boolean gameOver = false;
-	
+
 	String message1 = "";
 	String message2 = "";
+
+	//mini game
+	Boolean miniGame = false;
+	String movements = "";
 	
+	int posYouX = 400, posYouY = 250;
+
 	Toolkit herramienta;
-	
+
 	public Vista()
 	{
 		setTitle("Sunflower Brain");
@@ -53,52 +62,52 @@ public class Vista extends Frame
 		setBackground(Color.black);
 		setResizable(false);
 		setLocationRelativeTo(null);
-		
+
 		txtEvent.setEditable(false);
 		txtEvent.setBackground(Color.yellow);
 		txtEvent.setText("ZzZZzZZzZZzZZzZZzZZzZzzzzzzzzzzzzz.... You are sleeping.");
 		add(txtEvent);
-		
+
 		txtOptions.setEditable(false);
 		txtOptions.setText("A) "+optionA+"\nB) "+optionB+"\nC) "+optionC);
 		add(txtOptions);
-		
+
 		herramienta = getToolkit();
 		you 		= herramienta.getImage("images\\asleep.png");
-		
+
 		btnSelectA = herramienta.getImage("images\\selectA.png");
 		btnSelectB = herramienta.getImage("images\\selectB.png");
 		btnSelectC = herramienta.getImage("images\\selectC.png");
-		
+
 		btnReplaceA = herramienta.getImage("images\\replaceA.png");
 		btnReplaceB = herramienta.getImage("images\\replaceB.png");
 		btnReplaceC = herramienta.getImage("images\\replaceC.png");
-		
+
 		btnNext  = herramienta.getImage("images\\next.png");
 		spoons   = herramienta.getImage("images\\spoons5.png");
-		
+
 		//eliminar cuando hagas menú
 		setVisible(true);
 	}
 	public void paint(Graphics g)
 	{
-		g.drawImage(you, 400, 250, this);
-		
+		g.drawImage(you, posYouX, posYouY, this);
+
 		g.drawImage(btnSelectA, 320, 200, this);
 		g.drawImage(btnSelectB, 520, 200, this);
 		g.drawImage(btnSelectC, 720, 200, this);
-		
+
 		g.drawImage(btnNext, 535, 600, this);
 		g.drawImage(btnExit, 530, 550, this);
-		
+
 		g.drawImage(spoons, 140, 557, this);
-		
+
 		g.drawImage(btnReplaceA, 990, 530, this);
 		g.drawImage(btnReplaceB, 990, 560, this);
 		g.drawImage(btnReplaceC, 990, 590, this);
-		
+
 		g.drawImage(btnReshuffle, 800, 570, this);
-		
+
 		Font calibriS = new Font("Calibri", Font.BOLD, 12);
 		Font calibriB = new Font("Calibri", Font.BOLD, 18);
 		Font calibriG = new Font("Calibri", Font.BOLD, 25);
@@ -106,21 +115,28 @@ public class Vista extends Frame
 		g.setFont(calibriS);
 		g.setColor(Color.white);
 		g.drawString(newOptionTitle, 800, 470);
-		
+
 		if(!gameOver)
 		{
 			g.drawRect(800, 480, 300, 80);
 		}
-		
+
 		g.setFont(calibriB);
 		g.setColor(Color.yellow);
 		g.drawString(newOption, 830, 525);
-		
+
 		g.setFont(calibriG);
-		
+
 		g.setColor(Color.white);
 		g.drawString(message1, 190, 250);
 		g.setColor(Color.red);
 		g.drawString(message2, 540, 320);
+
+		if(miniGame)
+		{
+			g.setFont(calibriB);
+			g.setColor(Color.yellow);
+			g.drawString("Maps App says: " + movements, 540, 320);
+		}
 	}
 }
