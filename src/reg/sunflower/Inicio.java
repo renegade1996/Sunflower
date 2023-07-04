@@ -7,7 +7,8 @@ public class Inicio
 	{
 		Modelo modelo = new Modelo();
 		Vista vista = new Vista();
+		Menu menu = new Menu();
 		
-		new Controlador(modelo, vista);
+		new Controlador(modelo, vista, menu);
 	}
 }

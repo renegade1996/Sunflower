@@ -7,7 +7,6 @@ import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.TextArea;
-import java.awt.TextField;
 import java.awt.Toolkit;
 import java.io.File;
 
@@ -18,8 +17,8 @@ public class Vista extends Frame
 {
 	private static final long serialVersionUID = 1L;
 
-	TextField txtEvent = new TextField(140);
-	TextArea txtOptions = new TextArea(5,50);
+	TextArea txtEvent = new TextArea(3,140);
+	TextArea txtOptions = new TextArea(4,30);
 
 	Image btnReplaceA, btnReplaceB, btnReplaceC;
 	Image btnSelectA, btnSelectB, btnSelectC;
@@ -68,7 +67,7 @@ public class Vista extends Frame
 	public Vista()
 	{
 		setTitle("Sunflower Brain");
-		setLayout(new FlowLayout(FlowLayout.CENTER,380,20));
+		setLayout(new FlowLayout(FlowLayout.CENTER,380,10));
 		setSize(1200,760);
 		setBackground(Color.black);
 		setResizable(false);
@@ -97,9 +96,6 @@ public class Vista extends Frame
 
 		btnNext  = herramienta.getImage("images\\next.png");
 		spoons   = herramienta.getImage("images\\spoons5.png");
-
-		//eliminar cuando hagas menú
-		setVisible(true);
 	}
 	public void paint(Graphics g)
 	{

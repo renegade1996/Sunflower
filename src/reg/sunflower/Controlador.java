@@ -1,5 +1,8 @@
 package reg.sunflower;
 
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -16,16 +19,17 @@ import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
-public class Controlador implements WindowListener, MouseListener, KeyListener
+public class Controlador implements WindowListener, MouseListener, KeyListener, ActionListener
 {
 	Modelo modelo;
 	Vista  vista;
+	Menu   menu;
 
 	//Variables
 	Boolean op1 = false, op2 = false, op3 = false;
+	Boolean up  = false;
 
 	Boolean hasSpoon = false;
-	Boolean win 	 = false;
 	Boolean theEnd 	 = false;
 
 	String  opSelected = "";
@@ -39,14 +43,20 @@ public class Controlador implements WindowListener, MouseListener, KeyListener
 	int counterWater 	 = 0;
 	int counterMusic 	 = 0;
 
-	public Controlador(Modelo m, Vista v)
+	public Controlador(Modelo m, Vista v, Menu mn)
 	{
 		this.modelo = m;
 		this.vista  = v;
+		this.menu 	= mn;
 
 		//listeners
 		v.addWindowListener(this);
 		v.addMouseListener(this);
+
+		mn.addWindowListener(this);
+		mn.addMouseListener(this);
+		mn.dlgHelp.addWindowListener(this);
+		mn.btnBack.addActionListener(this);
 	}
 	@Override
 	public void mouseClicked(MouseEvent e)
@@ -55,8 +65,28 @@ public class Controlador implements WindowListener, MouseListener, KeyListener
 		int y = e.getY();
 
 		//System.out.println(x+"-"+y);
+		if(menu.isActive())
+		{
+			//btn help
+			if((x>=146 && x<=297)&&(y>=102 && y<=162))
+			{
+				menu.dlgHelp.setLayout(new FlowLayout());
+				menu.dlgHelp.setSize(200,100);
+				menu.dlgHelp.setTitle("Help?");
+				menu.dlgHelp.add(menu.lblHelp);
+				menu.dlgHelp.add(menu.btnBack);
+				menu.dlgHelp.setResizable(false);
+				menu.dlgHelp.setLocationRelativeTo(null);
 
-		if(vista.isActive()&&!(vista.gameOver))
+				menu.dlgHelp.setVisible(true);
+			}
+			//btn play
+			else if((x>=146 && x<=297)&&(y>=253 && y<=313))
+			{
+				vista.setVisible(true);
+			}
+		}
+		else if(vista.isActive()&&!(vista.gameOver))
 		{
 			//Click on option A
 			if((x>=320 && x<=474)&&(y>=201 && y<=250))
@@ -189,18 +219,18 @@ public class Controlador implements WindowListener, MouseListener, KeyListener
 						}
 						else if(counterStoryLine == 3 || counterStoryLine == 4 || counterStoryLine == 5 || counterStoryLine == 6)
 						{
-							vista.txtEvent.setText("You do nothing. You seem paralised. The public sees. Do something?");
+							vista.txtEvent.setText("You do nothing. You seem paralised. The public sees.\nDo something?");
 							counterSpoons-=2;
 						}
 						break;
 
 					case "Wake up":
-						vista.you = vista.herramienta.getImage("images\\awake.png");
-
+						up = true;
+						
 						if(counterStoryLine == 0)
 						{
 							counterStoryLine++;
-							vista.txtEvent.setText("You wake up. It's too warm. You feel dizzy (-1 spoon). You have committed to attend a social event today.");
+							vista.txtEvent.setText("You wake up. It's too warm. You feel dizzy (-1 spoon).\nYou have committed to attend a social event today.");
 							counterSpoons--;
 						}
 						else if(counterStoryLine == 1)
@@ -208,14 +238,14 @@ public class Controlador implements WindowListener, MouseListener, KeyListener
 							counterStoryLine++;
 							counterCoffee++;
 
-							vista.txtEvent.setText("You wash your face and get food and coffee. It wakes me up too (+1 spoon). You see your cat.");
+							vista.txtEvent.setText("You wash your face and get food and coffee. It wakes me up too (+1 spoon).\nYou see your cat.");
 							counterSpoons++;
 						}
 						else if(counterStoryLine == 2)
 						{
 							counterStoryLine++;
 
-							vista.txtEvent.setText("You wake up your cat. Your cat loves you but they're disappointed at you for not respecting their space (-2 spoons). You leave the house.");
+							vista.txtEvent.setText("You wake up your cat. Your cat loves you but they're disappointed at you for not respecting their space (-2 spoons).\nYou leave the house.");
 							counterSpoons-=2;
 						}
 						else if(counterStoryLine == 3)
@@ -225,12 +255,12 @@ public class Controlador implements WindowListener, MouseListener, KeyListener
 
 							if(counterCoffee == 1)
 							{
-								vista.txtEvent.setText("You get coffee to go so I can wake up too. On the way to the social event we mentally rehearse your performance in every possible scenario (-1 spoon). You get to the event.");
+								vista.txtEvent.setText("You get coffee to go so I can wake up too. On the way to the social event we mentally rehearse your performance in every possible scenario (-1 spoon).\nYou get to the event.");
 								counterSpoons--;
 							}
 							else if(counterCoffee == 2)
 							{
-								vista.txtEvent.setText("On the way to the social event you get more coffee to go. Your heart is racing and you can't even rehearse your social performance for the event (-2 spoons). This is your brain speaking: one more coffee and I quit.");
+								vista.txtEvent.setText("On the way to the social event you get more coffee to go. Your heart is racing and you can't even rehearse your social performance for the event (-2 spoons).\nThis is your brain speaking: one more coffee and I quit.");
 								counterSpoons-=2;
 							}
 						}
@@ -241,12 +271,12 @@ public class Controlador implements WindowListener, MouseListener, KeyListener
 
 							if(counterCoffee == 1)
 							{
-								vista.txtEvent.setText("You drink coffee at the event. The lack of alcohol as a social lubricant makes the event unbearable. You feel like a social failure (-2 spoons). You head to the park to process and relax.");
+								vista.txtEvent.setText("You drink coffee at the event. The lack of alcohol as a social lubricant makes the event unbearable. You feel like a social failure (-2 spoons).\nYou head to the park to process and relax.");
 								counterSpoons-=2;
 							}
 							else if(counterCoffee == 2)
 							{
-								vista.txtEvent.setText("You drink more coffee at the event. The lack of alcohol as a social lubricant makes the event unbearable. Your heart is racing (-2 spoons). You head to the park to process and relax. This is your brain speaking: one more cup and I quit.");
+								vista.txtEvent.setText("You drink more coffee at the event. The lack of alcohol as a social lubricant makes the event unbearable. Your heart is racing (-2 spoons).\nYou head to the park to process and relax. This is your brain speaking: one more cup and I quit.");
 								counterSpoons-=2;
 							}
 							else if(counterCoffee == 3)
@@ -262,11 +292,11 @@ public class Controlador implements WindowListener, MouseListener, KeyListener
 
 							if(counterCoffee == 1)
 							{
-								vista.txtEvent.setText("The park is crowded. You're overstimulated and extremely tired. You get a coffee to wake me up but it gives you anxiety. Has the way back home always been this long and blurry?");
+								vista.txtEvent.setText("The park is crowded. You're overstimulated and extremely tired. You get a coffee to wake me up but it gives you anxiety.\nHas the way back home always been this long and blurry?");
 							}
 							else if(counterCoffee == 2)
 							{
-								vista.txtEvent.setText("The park is crowded. You're extremely tired. You buy some more caffeine and head home. This is your brain speaking: one more cup and I quit. Has the way back home always been this long and blurry?");
+								vista.txtEvent.setText("The park is crowded. You're extremely tired. You buy some more caffeine and head home. This is your brain speaking: one more cup and I quit.\nHas the way back home always been this long and blurry?");
 							}
 							else if(counterCoffee == 3)
 							{
@@ -283,11 +313,11 @@ public class Controlador implements WindowListener, MouseListener, KeyListener
 
 							if(counterCoffee == 1)
 							{
-								vista.txtEvent.setText("You stop for coffee to wake me up. You're overstimulated, anxious and disoriented. The barista calls your name 4 times before you hear it. GO HOME RIGHT NOW.");
+								vista.txtEvent.setText("You stop for coffee to wake me up. You're overstimulated, anxious and disoriented. The barista calls your name 4 times before you hear it.\nGO HOME RIGHT NOW.");
 							}
 							else if(counterCoffee == 2)
 							{
-								vista.txtEvent.setText("You stop for more coffee. You're overstimulated, anxious and disoriented. The barista calls your name 4 times before you hear it. GO HOME RIGHT NOW.");
+								vista.txtEvent.setText("You stop for more coffee. You're overstimulated, anxious and disoriented. The barista calls your name 4 times before you hear it.\nGO HOME RIGHT NOW.");
 							}
 							else if(counterCoffee >= 3)
 							{
@@ -306,36 +336,36 @@ public class Controlador implements WindowListener, MouseListener, KeyListener
 						if(counterStoryLine == 1)
 						{
 							counterStoryLine++;
-							vista.txtEvent.setText("You decide to interact with the world. You get up (-1 spoon). You see your cat.");
+							vista.txtEvent.setText("You decide to interact with the world. You get up (-1 spoon).\nYou see your cat.");
 							counterSpoons--;
 						}
 						else if(counterStoryLine == 2)
 						{
 							counterStoryLine++;
-							vista.txtEvent.setText("You pet your cat. It purrs. It restores your spoons. You go outside.");
+							vista.txtEvent.setText("You pet your cat. It purrs. It restores your spoons.\nYou go outside.");
 							counterSpoons = 5;
 						}
 						else if(counterStoryLine == 3)
 						{
 							counterStoryLine++;
-							vista.txtEvent.setText("On the way to the social event you find an acquaintance and you interact with them. You were not ready for this. It dysregulates you (-3 spoons). You get to the social event.");
+							vista.txtEvent.setText("On the way to the social event you find an acquaintance and you interact with them. You were not ready for this. It dysregulates you (-3 spoons).\nYou get to the social event.");
 							counterSpoons-=3;
 						}
 						else if(counterStoryLine == 4)
 						{
 							counterStoryLine++;
-							vista.txtEvent.setText("You understand half of what the people at the event are saying. You try to interact but you make a fool of yourself (-2 spoons). You head to the park to process and relax.");
+							vista.txtEvent.setText("You understand half of what the people at the event are saying. You try to interact but you make a fool of yourself (-2 spoons).\nYou head to the park to process and relax.");
 							counterSpoons-=2;
 						}
 						else if(counterStoryLine == 5)
 						{
 							counterStoryLine++;
-							vista.txtEvent.setText("You try to make your senses interact with nature but it's crowded, warm and noisy. You head home. Has the way back home always been this long and blurry?");
+							vista.txtEvent.setText("You try to make your senses interact with nature but it's crowded, warm and noisy.\nYou head home. Has the way back home always been this long and blurry?");
 							counterSpoons  = 1;
 						}
 						else if(counterStoryLine == 6)
 						{
-							vista.txtEvent.setText("Someone asks for directions on your way home. You didn't prepare for this. You make an effort to interact but words don't come out right. You're extremely anxious and disoriented. GO HOME RIGHT NOW.");
+							vista.txtEvent.setText("Someone asks for directions on your way home. You didn't prepare for this. You make an effort to interact but words don't come out right.\nYou're extremely anxious and disoriented. GO HOME RIGHT NOW.");
 							miniGame();
 						}
 						break;
@@ -345,36 +375,36 @@ public class Controlador implements WindowListener, MouseListener, KeyListener
 						if(counterStoryLine == 1)
 						{
 							counterStoryLine++;
-							vista.txtEvent.setText("You can't ignore your commitments. You get up and see your cat.");
+							vista.txtEvent.setText("You can't ignore your commitments.\nYou get up and see your cat.");
 						}
 						else if(counterStoryLine == 2)
 						{
 							counterStoryLine++;
-							vista.txtEvent.setText("You ignore your cat. Your cat probably hates you for that (-2 spoons). We don't deserve them. You go outside.");
+							vista.txtEvent.setText("You ignore your cat. Your cat probably hates you for that (-2 spoons).\nWe don't deserve them. You go outside.");
 							counterSpoons-=2;
 						}
 						else if(counterStoryLine == 3)
 						{
 							counterStoryLine++;
-							vista.txtEvent.setText("On the way to the social event you find an acquaintance. You are not ready for this. You freeze and ignore them. It dysregulates you (-2 spoons). You get to the social event.");
+							vista.txtEvent.setText("On the way to the social event you find an acquaintance. You are not ready for this. You freeze and ignore them. It dysregulates you (-2 spoons).\nYou get to the social event.");
 							counterSpoons-=2;
 						}
 						else if(counterStoryLine == 4)
 						{
 							counterStoryLine++;
-							vista.txtEvent.setText("You struggle to keep up at the event. You feel out of place. You give up and dissociate. You feel like a social failure (-2 spoons). You head to the park to process and relax.");
+							vista.txtEvent.setText("You struggle to keep up at the event. You feel out of place. You give up and dissociate. You feel like a social failure (-2 spoons).\nYou head to the park to process and relax.");
 							counterSpoons-=2;
 						}
 						else if(counterStoryLine == 5)
 						{
 							counterStoryLine++;
-							vista.txtEvent.setText("You try to enjoy nature but you're dissociated. You ignore nature. You head home. Has the way back home always been this long and blurry?");
+							vista.txtEvent.setText("You try to enjoy nature but you're dissociated. You ignore nature.\nYou head home. Has the way back home always been this long and blurry?");
 							counterSpoons = 1;
 
 						}
 						else if(counterStoryLine == 6)
 						{
-							vista.txtEvent.setText("Someone asks for directions on your way home. You didn't prepare for this. You make an effort to interact but words don't come out right. You're extremely anxious and disoriented. GO HOME RIGHT NOW.");
+							vista.txtEvent.setText("Someone asks for directions on your way home. You didn't prepare for this. You make an effort to interact but words don't come out right.\nYou're extremely anxious and disoriented. GO HOME RIGHT NOW.");
 							miniGame();
 						}
 						break;
@@ -408,18 +438,18 @@ public class Controlador implements WindowListener, MouseListener, KeyListener
 
 							if(counterWater == 1 && counterCoffee < 2)
 							{
-								vista.txtEvent.setText("You drink water on the way to the social event. It makes you feel good. Temporarily. You mentally rehearse your social performance for the event (-1 spoon). You get to the event.");
+								vista.txtEvent.setText("You drink water on the way to the social event. It makes you feel good. Temporarily. You mentally rehearse your social performance for the event (-1 spoon).\nYou get to the event.");
 								counterSpoons--;
 							}
 							else if(counterWater == 2 && counterCoffee == 0)
 							{
 
-								vista.txtEvent.setText("You drink more water on the way to the social event. Ok. You mentally rehearse your social performance for the event (-1 spoon). You get to the event.");
+								vista.txtEvent.setText("You drink more water on the way to the social event. Ok. You mentally rehearse your social performance for the event (-1 spoon).\nYou get to the event.");
 								counterSpoons--;
 							}
 							else if((counterWater > 2) || (counterWater == 2 && counterCoffee > 0) || (counterWater == 1 && counterCoffee > 1))
 							{
-								vista.txtEvent.setText("You drink water on the way to the social event. Well, now you need to find a toilet. The unplanned deviation dysregulates you (-1 spoon). You finally get to the event.");
+								vista.txtEvent.setText("You drink water on the way to the social event. Well, now you need to find a toilet. The unplanned deviation dysregulates you (-1 spoon).\nYou finally get to the event.");
 								counterSpoons--;
 							}
 						}
@@ -429,12 +459,12 @@ public class Controlador implements WindowListener, MouseListener, KeyListener
 
 							if((counterWater == 1 && counterCoffee < 2) || (counterWater == 2 && counterCoffee == 0))
 							{
-								vista.txtEvent.setText("You drink water at the event. The lack of alcohol as a social lubricant makes the event unbearable. You feel like a social failure (-2 spoons). You head to the park to process and relax.");
+								vista.txtEvent.setText("You drink water at the event. The lack of alcohol as a social lubricant makes the event unbearable. You feel like a social failure (-2 spoons).\nYou head to the park to process and relax.");
 								counterSpoons-=2;
 							}
 							else if((counterWater > 2) || (counterWater == 2 && counterCoffee > 0) || (counterWater == 1 && counterCoffee > 1))
 							{
-								vista.txtEvent.setText("You drink water at the event. Well, now you need to pee. You don't know when to interrupt to say it (-1 spoon). You feel very awkward. You leave early and go to the park to process and relax.");
+								vista.txtEvent.setText("You drink water at the event. Well, now you need to pee. You don't know when to interrupt to say it (-1 spoon). You feel very awkward.\nYou leave early and go to the park to process and relax.");
 								counterSpoons--;
 							}
 						}
@@ -445,11 +475,11 @@ public class Controlador implements WindowListener, MouseListener, KeyListener
 
 							if((counterWater == 1 && counterCoffee < 2) || (counterWater == 2 && counterCoffee == 0))
 							{
-								vista.txtEvent.setText("You drink water at the park. It hydrates you, but it's still warm and noisy. The park overstimulates you, so you head home. Has the way back home always been this long and blurry?");
+								vista.txtEvent.setText("You drink water at the park. It hydrates you, but it's still warm and noisy. The park overstimulates you, so you head home.\nHas the way back home always been this long and blurry?");
 							}
 							else if((counterWater > 2) || (counterWater == 2 && counterCoffee > 0) || (counterWater == 1 && counterCoffee > 1))
 							{
-								vista.txtEvent.setText("You drink water at the park. Well, now you need to pee. You can't sit and enjoy nature. You are stressed. You head home. Has the way back home always been this long and blurry?");
+								vista.txtEvent.setText("You drink water at the park. Well, now you need to pee. You can't sit and enjoy nature. You are stressed.\nYou head home. Has the way back home always been this long and blurry?");
 							}
 							counterSpoons  = 1;
 						}
@@ -457,11 +487,11 @@ public class Controlador implements WindowListener, MouseListener, KeyListener
 						{
 							if((counterWater == 1 && counterCoffee < 2) || (counterWater == 2 && counterCoffee == 0))
 							{
-								vista.txtEvent.setText("You drink water on your way home. Your hands are suddenly shaking and you drop the bottle. There's a lot of traffic. You are overstimulated and disoriented.");
+								vista.txtEvent.setText("You drink water on your way home. Your hands are suddenly shaking and you drop the bottle.\nThere's a lot of traffic. You are overstimulated and disoriented.");
 							}
 							else if((counterWater > 2) || (counterWater == 2 && counterCoffee > 0) || (counterWater == 1 && counterCoffee > 1))
 							{
-								vista.txtEvent.setText("You drink more water on your way home. Now you need to pee. There's a lot of traffic. You are overstimulated, stressed and disoriented.");
+								vista.txtEvent.setText("You drink more water on your way home. Now you need to pee. There's a lot of traffic.\nYou are overstimulated, stressed and disoriented.");
 							}
 							miniGame();
 						}
@@ -473,7 +503,7 @@ public class Controlador implements WindowListener, MouseListener, KeyListener
 						{
 							counterStoryLine++;
 
-							vista.txtEvent.setText("You listen to some music before getting up. It tickles your brain and travels around your whole body (+1 spoon). You get up and see your cat.");
+							vista.txtEvent.setText("You listen to some music before getting up. It tickles your brain and travels around your whole body (+1 spoon).\nYou get up and see your cat.");
 							//play music
 							counterSpoons++;
 							counterMusic++;	
@@ -485,12 +515,12 @@ public class Controlador implements WindowListener, MouseListener, KeyListener
 
 							if(counterMusic == 1)
 							{
-								vista.txtEvent.setText("You listen to some music. It tickles your brain and it makes you jump around (+1 spoon). Your cat enters crazy mode and runs across the room. Haha. You go outside.");
+								vista.txtEvent.setText("You listen to some music. It tickles your brain and it makes you jump around (+1 spoon).\nYour cat enters crazy mode and runs across the room. Haha. You go outside.");
 								counterSpoons++;
 							}
 							else if(counterMusic == 2)
 							{
-								vista.txtEvent.setText("You keep listening to the same song. It makes you jump around (+1 spoon). Your cat enters crazy mode and runs across the room. Haha. You go outside.");
+								vista.txtEvent.setText("You keep listening to the same song. It makes you jump around (+1 spoon).\nYour cat enters crazy mode and runs across the room. Haha. You go outside.");
 								counterSpoons++;
 							}
 						}
@@ -501,15 +531,15 @@ public class Controlador implements WindowListener, MouseListener, KeyListener
 
 							if(counterMusic == 1)
 							{
-								vista.txtEvent.setText("You listen to music on the way to the social event. It protects you from any external stimuli and it quiets down your thoughts. You get to the event.");
+								vista.txtEvent.setText("You listen to music on the way to the social event. It protects you from any external stimuli and it quiets down your thoughts.\nYou get to the event.");
 							}
 							else if(counterMusic == 2)
 							{
-								vista.txtEvent.setText("You listen to the same song on your way to the social event. It protects you from any external stimuli and it quiets down your thoughts. You get to the event.");
+								vista.txtEvent.setText("You listen to the same song on your way to the social event. It protects you from any external stimuli and it quiets down your thoughts.\nYou get to the event.");
 							}
 							else if(counterMusic == 3)
 							{
-								vista.txtEvent.setText("You keep your song on loop on your way to the social event. It protects you from external stimuli and it quiets down your thoughts. You get to the event.");
+								vista.txtEvent.setText("You keep your song on loop on your way to the social event. It protects you from external stimuli and it quiets down your thoughts.\nYou get to the event.");
 							}
 							else if(counterMusic > 3)
 							{
@@ -519,19 +549,19 @@ public class Controlador implements WindowListener, MouseListener, KeyListener
 						else if(counterStoryLine == 4)
 						{
 							counterStoryLine++;
-							vista.txtEvent.setText("It's very noisy, so you wear your headphones at the event. People look puzzled and upset. You feel like a social failure (-2 spoons). You head to the park to process and relax.");
+							vista.txtEvent.setText("It's very noisy, so you wear your headphones at the event. People look puzzled and upset. You feel like a social failure (-2 spoons).\nYou head to the park to process and relax.");
 							counterSpoons-=2;
 						}
 						else if(counterStoryLine == 5)
 						{
 							counterStoryLine++;
 
-							vista.txtEvent.setText("The park is noisy, warm and crowded. You wear your headphones but it doesn't help. You're tired and overstimulated. You head home. Has the way back home always been this long and blurry?");
+							vista.txtEvent.setText("The park is noisy, warm and crowded. You wear your headphones but it doesn't help. You're tired and overstimulated.\nYou head home. Has the way back home always been this long and blurry?");
 							counterSpoons  = 1;
 						}
 						else if(counterStoryLine == 6)
 						{
-							vista.txtEvent.setText("You wear your headphones on your way home but it doesn't help. It's too warm, there's a lot of traffic and your senses are confused. You are extremely overstimulated and disoriented.");
+							vista.txtEvent.setText("You wear your headphones on your way home but it doesn't help. It's too warm, there's a lot of traffic and your senses are confused.\nYou are extremely overstimulated and disoriented.");
 							miniGame();
 						}
 						break;
@@ -621,7 +651,10 @@ public class Controlador implements WindowListener, MouseListener, KeyListener
 				}
 				else
 				{
-					vista.you = vista.herramienta.getImage("Images\\neutral.png");
+					if(up)
+					{
+						vista.you = vista.herramienta.getImage("Images\\neutral.png");
+					}
 				}
 				vista.spoons  = vista.herramienta.getImage("Images\\spoons5.png");
 				counterSpoons = 5;
@@ -677,10 +710,7 @@ public class Controlador implements WindowListener, MouseListener, KeyListener
 
 		vista.remove(vista.txtOptions);
 
-		if(!win)
-		{
-			vista.message2 = "GAME 	OVER";
-		}
+		vista.message2 = "GAME 	OVER";
 		vista.btnExit  = vista.herramienta.getImage("images\\exit.png");
 
 		vista.repaint();
@@ -690,7 +720,7 @@ public class Controlador implements WindowListener, MouseListener, KeyListener
 	private void miniGame()
 	{
 		//window
-		vista.txtOptions.setText("ATTENTION: You are at your limit.\n\nUse the KEYBOARD to move,\nGRAB your last spoon with INTRO, and run home.");
+		vista.txtOptions.setText("ATTENTION: You are at your limit.\nUse the KEYBOARD to move,\nGRAB your last spoon with INTRO,\nand run home.");
 
 		vista.gameOver = true; //so it doesn't paint the rect
 
@@ -761,10 +791,15 @@ public class Controlador implements WindowListener, MouseListener, KeyListener
 	@Override
 	public void windowClosing(WindowEvent e)
 	{
-		if(vista.isActive())
+		if(menu.dlgHelp.isActive())
+		{
+			menu.dlgHelp.setVisible(false);
+		}
+		else if(vista.isActive() || menu.isActive())
 		{
 			System.exit(0);
 		}
+
 	}
 	@Override
 	public void windowClosed(WindowEvent e){}
@@ -809,7 +844,7 @@ public class Controlador implements WindowListener, MouseListener, KeyListener
 				vista.posYMsg1 = 300;
 				vista.posYMsg2 = 350;
 				vista.message1 = "Oh, did that red line make you rush? It doesn't really do anything...";
-				vista.message2 = "There's only one way to win this game. Get to bed, it's time to rest (SPACE key to get in).";
+				vista.message2 = "There's only one way to win this game. Go to bed, it's time to rest (SPACE key to get in).";
 
 				//restore window
 				vista.miniGame = false;
@@ -880,7 +915,7 @@ public class Controlador implements WindowListener, MouseListener, KeyListener
 				vista.message1 = "You still had the option to wake up the next day";
 				vista.message2 = "THE END.";
 				vista.repaint();
-				
+
 				stopPrevMusic();
 
 				try
@@ -956,5 +991,13 @@ public class Controlador implements WindowListener, MouseListener, KeyListener
 
 	@Override
 	public void keyReleased(KeyEvent e){}
+	@Override
+	public void actionPerformed(ActionEvent e)
+	{
+		if(e.getSource().equals(menu.btnBack))
+		{
+			menu.dlgHelp.setVisible(false);
+		}
+	}
 }
 
