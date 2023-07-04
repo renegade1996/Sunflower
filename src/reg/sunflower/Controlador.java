@@ -30,7 +30,7 @@ public class Controlador implements WindowListener, MouseListener, KeyListener
 
 	String  opSelected = "";
 	Random  random	   = new Random();
-	
+
 	Clip ol;
 
 	int counterStoryLine = 0;
@@ -54,7 +54,7 @@ public class Controlador implements WindowListener, MouseListener, KeyListener
 		int x = e.getX();
 		int y = e.getY();
 
-		System.out.println(x+"-"+y);
+		//System.out.println(x+"-"+y);
 
 		if(vista.isActive()&&!(vista.gameOver))
 		{
@@ -192,10 +192,6 @@ public class Controlador implements WindowListener, MouseListener, KeyListener
 							vista.txtEvent.setText("You do nothing. You seem paralised. The public sees. Do something?");
 							counterSpoons-=2;
 						}
-						else if(counterStoryLine == 7)
-						{
-							System.exit(0);
-						}
 						break;
 
 					case "Wake up":
@@ -259,11 +255,6 @@ public class Controlador implements WindowListener, MouseListener, KeyListener
 								vista.message1 = "I warned you???????";
 							}
 						}
-						else if(counterStoryLine == 7)
-						{
-							vista.message1 = "You made it.";
-							vista.message1 = "You woke up one more day.";
-						}
 						else if(counterStoryLine == 5)
 						{
 							counterStoryLine++;
@@ -309,14 +300,6 @@ public class Controlador implements WindowListener, MouseListener, KeyListener
 								miniGame();
 							}
 						}
-						else if(counterStoryLine == 7)
-						{
-							vista.message1 = "You made it.";
-							vista.message2 = "you woke up one more day";
-
-							win = true;
-							gameOver();
-						}
 						break;
 
 					case "Interact":
@@ -354,10 +337,6 @@ public class Controlador implements WindowListener, MouseListener, KeyListener
 						{
 							vista.txtEvent.setText("Someone asks for directions on your way home. You didn't prepare for this. You make an effort to interact but words don't come out right. You're extremely anxious and disoriented. GO HOME RIGHT NOW.");
 							miniGame();
-						}
-						else if(counterStoryLine == 7)
-						{
-							System.exit(0);
 						}
 						break;
 
@@ -397,10 +376,6 @@ public class Controlador implements WindowListener, MouseListener, KeyListener
 						{
 							vista.txtEvent.setText("Someone asks for directions on your way home. You didn't prepare for this. You make an effort to interact but words don't come out right. You're extremely anxious and disoriented. GO HOME RIGHT NOW.");
 							miniGame();
-						}
-						else if(counterStoryLine == 7)
-						{
-							System.exit(0);
 						}
 						break;
 
@@ -490,10 +465,6 @@ public class Controlador implements WindowListener, MouseListener, KeyListener
 							}
 							miniGame();
 						}
-						else if(counterStoryLine == 7)
-						{
-							System.exit(0);
-						}
 						break;
 
 					case "Wear headphones":
@@ -562,10 +533,6 @@ public class Controlador implements WindowListener, MouseListener, KeyListener
 						{
 							vista.txtEvent.setText("You wear your headphones on your way home but it doesn't help. It's too warm, there's a lot of traffic and your senses are confused. You are extremely overstimulated and disoriented.");
 							miniGame();
-						}
-						else if(counterStoryLine == 7)
-						{
-							System.exit(0);
 						}
 						break;
 					}
@@ -836,23 +803,17 @@ public class Controlador implements WindowListener, MouseListener, KeyListener
 			{
 				theEnd = true;
 				stopPrevMusic();
-				
+
 				//messages
 				vista.posXMsg2 = 190;
-				vista.posYMsg1 = 350;
-				vista.posYMsg2 = 400;
+				vista.posYMsg1 = 300;
+				vista.posYMsg2 = 350;
 				vista.message1 = "Oh, did that red line make you rush? It doesn't really do anything...";
-				vista.message2 = "There's only one way to win this game. Can you still WAKE UP the next day?";
+				vista.message2 = "There's only one way to win this game. Get to bed, it's time to rest (SPACE key to get in).";
 
 				//restore window
 				vista.miniGame = false;
-				vista.addMouseListener(this);
-				vista.removeKeyListener(this);
-
-				vista.btnNext    = vista.herramienta.getImage("Images\\next.png");
-				vista.btnSelectA = vista.herramienta.getImage("Images\\selectA.png");
-				vista.btnSelectB = vista.herramienta.getImage("Images\\selectB.png");
-				vista.btnSelectC = vista.herramienta.getImage("Images\\selectC.png");
+				vista.bed 	   = vista.herramienta.getImage("Images\\bed.png");
 
 				vista.txtOptions.setText("A) "+vista.optionA+"\nB) "+vista.optionB+"\nC) "+vista.optionC);
 				vista.txtEvent.setText("DO YOU SURVIVE ANOTHER DAY?");
@@ -866,7 +827,7 @@ public class Controlador implements WindowListener, MouseListener, KeyListener
 					AudioFormat af 	   = vista.affTE.getFormat();
 					DataLine.Info info = new DataLine.Info(Clip.class, vista.aisTE.getFormat(), ((int) vista.aisTE.getFrameLength() * af.getFrameSize()));
 
-					Clip ol = (Clip) AudioSystem.getLine(info);
+					ol = (Clip) AudioSystem.getLine(info);
 					ol.open(vista.aisTE);
 					ol.loop(Clip.LOOP_CONTINUOUSLY); //()number of reproductions or (Clip.LOOP_CONTINUOUSLY)
 				}
@@ -909,9 +870,91 @@ public class Controlador implements WindowListener, MouseListener, KeyListener
 
 			hasSpoon = true;
 		}
+		if(keyCode == KeyEvent.VK_SPACE && (vista.posYouX > 96 && vista.posYouX < 240)&&(vista.posYouY > 314 && vista.posYouY < 434)) 
+		{
+			vista.bed = vista.herramienta.getImage("images\\bedIn.png");
+			vista.you = vista.herramienta.getImage("");
+
+			if(vista.txtOptions.getText().contains("Wake up"))
+			{
+				vista.message1 = "You still had the option to wake up the next day";
+				vista.message2 = "THE END.";
+				vista.repaint();
+				
+				stopPrevMusic();
+
+				try
+				{
+					vista.affS = AudioSystem.getAudioFileFormat(vista.success);
+					vista.aisS = AudioSystem.getAudioInputStream(vista.success);
+
+					AudioFormat af = vista.affS.getFormat();
+					DataLine.Info info = new DataLine.Info(Clip.class, vista.aisS.getFormat(), ((int) vista.aisS.getFrameLength() * af.getFrameSize()));
+					Clip ol = (Clip) AudioSystem.getLine(info);
+					ol.open(vista.aisS);
+					ol.loop(0); //()number of reproductions or (Clip.LOOP_CONTINUOUSLY)
+					Thread.sleep(2000);
+					ol.close();
+				}
+				catch(UnsupportedAudioFileException ee)
+				{
+					System.out.println(ee.getMessage());
+				}
+				catch(IOException ea)
+				{
+					System.out.println(ea.getMessage());
+				}
+				catch(LineUnavailableException LUE)
+				{
+					System.out.println(LUE.getMessage());
+				}
+				catch (InterruptedException ie)
+				{
+					ie.printStackTrace();
+				}
+			}
+			else
+			{
+				vista.message1 = "You did not have the option to wake up the next day";
+				vista.message2 = "THE END.";
+
+				stopPrevMusic();
+
+				try
+				{
+					vista.affF = AudioSystem.getAudioFileFormat(vista.wahwah);
+					vista.aisF = AudioSystem.getAudioInputStream(vista.wahwah);
+
+					AudioFormat af = vista.affF.getFormat();
+					DataLine.Info info = new DataLine.Info(Clip.class, vista.aisF.getFormat(), ((int) vista.aisF.getFrameLength() * af.getFrameSize()));
+					Clip ol = (Clip) AudioSystem.getLine(info);
+					ol.open(vista.aisF);
+					ol.loop(0); //()number of reproductions or (Clip.LOOP_CONTINUOUSLY)
+					Thread.sleep(5000);
+					ol.close();
+				}
+				catch(UnsupportedAudioFileException ee)
+				{
+					System.out.println(ee.getMessage());
+				}
+				catch(IOException ea)
+				{
+					System.out.println(ea.getMessage());
+				}
+				catch(LineUnavailableException LUE)
+				{
+					System.out.println(LUE.getMessage());
+				}
+				catch (InterruptedException ie)
+				{
+					ie.printStackTrace();
+				}
+			}
+		}
 		vista.repaint();
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e){}
 }
+

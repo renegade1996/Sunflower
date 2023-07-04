@@ -25,10 +25,13 @@ public class Vista extends Frame
 	Image btnSelectA, btnSelectB, btnSelectC;
 	Image btnNext, btnExit, btnReshuffle;
 	Image house, spoons, you;
+	Image bed;
 
 	File errorSoundFile  = new File("sounds\\error.wav");
 	File backgroundMusic = new File("sounds\\gettingHome.wav");
 	File theEnd			 = new File("sounds\\theEnd.wav");
+	File wahwah			 = new File("sounds\\wahwah.wav");
+	File success		 = new File("sounds\\success.wav");
 	
 	AudioFileFormat  affE;
 	AudioInputStream aisE;
@@ -36,7 +39,11 @@ public class Vista extends Frame
 	AudioInputStream aisM;
 	AudioFileFormat  affTE;
 	AudioInputStream aisTE;
-
+	AudioFileFormat  affF;
+	AudioInputStream aisF;
+	AudioFileFormat  affS;
+	AudioInputStream aisS;
+	
 	String allOptions[]   = {"...", "Wake up", "Interact", "Ignore", "Drink water", "Wear headphones"};
 	String newOptionTitle = "N E W  O P T I O N  A V A I L A B L E";
 
@@ -112,6 +119,8 @@ public class Vista extends Frame
 		g.drawImage(btnReplaceC, 990, 590, this);
 
 		g.drawImage(btnReshuffle, 800, 570, this);
+		
+		g.drawImage(bed, 140, 400, this);
 
 		Font calibriS = new Font("Calibri", Font.BOLD, 12);
 		Font calibriB = new Font("Calibri", Font.BOLD, 18);
