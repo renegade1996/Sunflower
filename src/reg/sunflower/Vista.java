@@ -26,12 +26,16 @@ public class Vista extends Frame
 	Image btnNext, btnExit, btnReshuffle;
 	Image house, spoons, you;
 
-	File errorSoundFile = new File("sounds\\error.wav");
-	File goingHome		= new File("sounds\\goingHome.wav");
+	File errorSoundFile  = new File("sounds\\error.wav");
+	File backgroundMusic = new File("sounds\\gettingHome.wav");
+	File theEnd			 = new File("sounds\\theEnd.wav");
+	
 	AudioFileFormat  affE;
 	AudioInputStream aisE;
 	AudioFileFormat  affM;
 	AudioInputStream aisM;
+	AudioFileFormat  affTE;
+	AudioInputStream aisTE;
 
 	String allOptions[]   = {"...", "Wake up", "Interact", "Ignore", "Drink water", "Wear headphones"};
 	String newOptionTitle = "N E W  O P T I O N  A V A I L A B L E";
@@ -120,11 +124,11 @@ public class Vista extends Frame
 		if(!gameOver)
 		{
 			g.drawRect(800, 480, 300, 80);
+			
+			g.setFont(calibriB);
+			g.setColor(Color.yellow);
+			g.drawString(newOption, 830, 525);
 		}
-
-		g.setFont(calibriB);
-		g.setColor(Color.yellow);
-		g.drawString(newOption, 830, 525);
 
 		g.setFont(calibriG);
 

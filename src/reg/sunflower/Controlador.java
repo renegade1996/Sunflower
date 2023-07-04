@@ -26,10 +26,12 @@ public class Controlador implements WindowListener, MouseListener, KeyListener
 
 	Boolean hasSpoon = false;
 	Boolean win 	 = false;
-	Boolean endMusic = false;
+	Boolean theEnd 	 = false;
 
 	String  opSelected = "";
 	Random  random	   = new Random();
+	
+	Clip ol;
 
 	int counterStoryLine = 0;
 	int counterCoffee	 = 0;
@@ -347,7 +349,6 @@ public class Controlador implements WindowListener, MouseListener, KeyListener
 							counterStoryLine++;
 							vista.txtEvent.setText("You try to make your senses interact with nature but it's crowded, warm and noisy. You head home. Has the way back home always been this long and blurry?");
 							counterSpoons  = 1;
-
 						}
 						else if(counterStoryLine == 6)
 						{
@@ -376,7 +377,7 @@ public class Controlador implements WindowListener, MouseListener, KeyListener
 						else if(counterStoryLine == 3)
 						{
 							counterStoryLine++;
-							vista.txtEvent.setText("On the way to the social event you find an acquaintance. You were not ready for this. You freeze and ignore them. It dysregulates you (-2 spoons). You get to the social event.");
+							vista.txtEvent.setText("On the way to the social event you find an acquaintance. You are not ready for this. You freeze and ignore them. It dysregulates you (-2 spoons). You get to the social event.");
 							counterSpoons-=2;
 						}
 						else if(counterStoryLine == 4)
@@ -389,7 +390,7 @@ public class Controlador implements WindowListener, MouseListener, KeyListener
 						{
 							counterStoryLine++;
 							vista.txtEvent.setText("You try to enjoy nature but you're dissociated. You ignore nature. You head home. Has the way back home always been this long and blurry?");
-							counterSpoons  = 1;
+							counterSpoons = 1;
 
 						}
 						else if(counterStoryLine == 6)
@@ -469,7 +470,7 @@ public class Controlador implements WindowListener, MouseListener, KeyListener
 
 							if((counterWater == 1 && counterCoffee < 2) || (counterWater == 2 && counterCoffee == 0))
 							{
-								vista.txtEvent.setText("You drink water at the park. It hydrates you, but it's still warm and noisy. The park overstimulated you, so you head home. Has the way back home always been this long and blurry?");
+								vista.txtEvent.setText("You drink water at the park. It hydrates you, but it's still warm and noisy. The park overstimulates you, so you head home. Has the way back home always been this long and blurry?");
 							}
 							else if((counterWater > 2) || (counterWater == 2 && counterCoffee > 0) || (counterWater == 1 && counterCoffee > 1))
 							{
@@ -518,7 +519,8 @@ public class Controlador implements WindowListener, MouseListener, KeyListener
 							}
 							else if(counterMusic == 2)
 							{
-								vista.txtEvent.setText("You keep listening to the same song. It makes you jump around. Your cat enters crazy mode and runs across the room. Meh. You go outside.");
+								vista.txtEvent.setText("You keep listening to the same song. It makes you jump around (+1 spoon). Your cat enters crazy mode and runs across the room. Haha. You go outside.");
+								counterSpoons++;
 							}
 						}
 						else if(counterStoryLine == 3)
@@ -528,18 +530,15 @@ public class Controlador implements WindowListener, MouseListener, KeyListener
 
 							if(counterMusic == 1)
 							{
-								vista.txtEvent.setText("You listen to music on the way to the social event. It protects you from any external stimuli and it quiets down your thoughts (+1 spoon). You get to the event.");
-								counterSpoons++;
+								vista.txtEvent.setText("You listen to music on the way to the social event. It protects you from any external stimuli and it quiets down your thoughts. You get to the event.");
 							}
 							else if(counterMusic == 2)
 							{
-								vista.txtEvent.setText("You listen to the same song on your way to the social event. It protects you from any external stimuli and it quiets down your thoughts (+1 spoon). You get to the event.");
-								counterSpoons++;
+								vista.txtEvent.setText("You listen to the same song on your way to the social event. It protects you from any external stimuli and it quiets down your thoughts. You get to the event.");
 							}
 							else if(counterMusic == 3)
 							{
-								vista.txtEvent.setText("You keep your song on loop on your way to the social event. It protects you from external stimuli, it makes you feel safe, and it quiets down your thoughts (+1 spoon). You get to the event.");
-								counterSpoons++;
+								vista.txtEvent.setText("You keep your song on loop on your way to the social event. It protects you from external stimuli and it quiets down your thoughts. You get to the event.");
 							}
 							else if(counterMusic > 3)
 							{
@@ -549,7 +548,7 @@ public class Controlador implements WindowListener, MouseListener, KeyListener
 						else if(counterStoryLine == 4)
 						{
 							counterStoryLine++;
-							vista.txtEvent.setText("It's very noisy, so you wear your headphones at the event. People look stranged and upset. You feel like a social failure (-2 spoons). You head to the park to process and relax.");
+							vista.txtEvent.setText("It's very noisy, so you wear your headphones at the event. People look puzzled and upset. You feel like a social failure (-2 spoons). You head to the park to process and relax.");
 							counterSpoons-=2;
 						}
 						else if(counterStoryLine == 5)
@@ -724,13 +723,14 @@ public class Controlador implements WindowListener, MouseListener, KeyListener
 	private void miniGame()
 	{
 		//window
-		vista.miniGame = true;
 		vista.txtOptions.setText("ATTENTION: You are at your limit.\n\nUse the KEYBOARD to move,\nGRAB your last spoon with INTRO, and run home.");
+
+		vista.gameOver = true; //so it doesn't paint the rect
 
 		vista.removeMouseListener(this);
 		vista.addKeyListener(this);
 
-		vista.gameOver = true;
+		vista.miniGame = true;
 
 		vista.btnSelectA = vista.herramienta.getImage("");
 		vista.btnSelectB = vista.herramienta.getImage("");
@@ -750,22 +750,17 @@ public class Controlador implements WindowListener, MouseListener, KeyListener
 		vista.requestFocusInWindow();
 
 		//background music
-
 		try
 		{
-			vista.affM = AudioSystem.getAudioFileFormat(vista.goingHome);
-			vista.aisM = AudioSystem.getAudioInputStream(vista.goingHome);
+			vista.affM = AudioSystem.getAudioFileFormat(vista.backgroundMusic);
+			vista.aisM = AudioSystem.getAudioInputStream(vista.backgroundMusic);
 
-			AudioFormat af = vista.affM.getFormat();
+			AudioFormat af 	   = vista.affM.getFormat();
 			DataLine.Info info = new DataLine.Info(Clip.class, vista.aisM.getFormat(), ((int) vista.aisM.getFrameLength() * af.getFrameSize()));
-			Clip ol = (Clip) AudioSystem.getLine(info);
+
+			ol = (Clip) AudioSystem.getLine(info);
 			ol.open(vista.aisM);
 			ol.loop(Clip.LOOP_CONTINUOUSLY); //()number of reproductions or (Clip.LOOP_CONTINUOUSLY)
-			
-			if(endMusic)
-			{
-				ol.close();
-			}
 		}
 		catch(UnsupportedAudioFileException ee)
 		{
@@ -780,7 +775,12 @@ public class Controlador implements WindowListener, MouseListener, KeyListener
 			System.out.println(LUE.getMessage());
 		}
 	}
-
+	private void stopPrevMusic()
+	{
+		ol.stop();
+		ol.flush();
+		ol.close();
+	}
 	@Override
 	public void mousePressed(MouseEvent e){}
 	@Override
@@ -834,23 +834,55 @@ public class Controlador implements WindowListener, MouseListener, KeyListener
 			}
 			if(hasSpoon && (vista.posYouX > 650 && vista.posYouX < 701))
 			{
+				theEnd = true;
+				stopPrevMusic();
+				
+				//messages
 				vista.posXMsg2 = 190;
 				vista.posYMsg1 = 350;
 				vista.posYMsg2 = 400;
 				vista.message1 = "Oh, did that red line make you rush? It doesn't really do anything...";
-				vista.message2 = "There's only one way to win this game. Can you still WAKE UP?";
+				vista.message2 = "There's only one way to win this game. Can you still WAKE UP the next day?";
 
 				//restore window
+				vista.miniGame = false;
 				vista.addMouseListener(this);
-				endMusic = true;
-				
-				vista.miniGame 	 = false;
+				vista.removeKeyListener(this);
+
 				vista.btnNext    = vista.herramienta.getImage("Images\\next.png");
 				vista.btnSelectA = vista.herramienta.getImage("Images\\selectA.png");
 				vista.btnSelectB = vista.herramienta.getImage("Images\\selectB.png");
 				vista.btnSelectC = vista.herramienta.getImage("Images\\selectC.png");
 
 				vista.txtOptions.setText("A) "+vista.optionA+"\nB) "+vista.optionB+"\nC) "+vista.optionC);
+				vista.txtEvent.setText("DO YOU SURVIVE ANOTHER DAY?");
+
+				//end music
+				try
+				{
+					vista.affTE = AudioSystem.getAudioFileFormat(vista.theEnd);
+					vista.aisTE = AudioSystem.getAudioInputStream(vista.theEnd);
+
+					AudioFormat af 	   = vista.affTE.getFormat();
+					DataLine.Info info = new DataLine.Info(Clip.class, vista.aisTE.getFormat(), ((int) vista.aisTE.getFrameLength() * af.getFrameSize()));
+
+					Clip ol = (Clip) AudioSystem.getLine(info);
+					ol.open(vista.aisTE);
+					ol.loop(Clip.LOOP_CONTINUOUSLY); //()number of reproductions or (Clip.LOOP_CONTINUOUSLY)
+				}
+				catch(UnsupportedAudioFileException ee)
+				{
+					System.out.println(ee.getMessage());
+				}
+				catch(IOException ea)
+				{
+					System.out.println(ea.getMessage());
+				}
+				catch(LineUnavailableException LUE)
+				{
+					System.out.println(LUE.getMessage());
+				}
+
 				counterStoryLine++;
 			}
 		}
@@ -873,7 +905,7 @@ public class Controlador implements WindowListener, MouseListener, KeyListener
 		if((keyCode == KeyEvent.VK_ENTER) && (vista.posYouX > 10 && vista.posYouX < 200)&&(vista.posYouY > 350 && vista.posYouY < 680))
 		{
 			vista.spoons = vista.herramienta.getImage("");
-			vista.you = vista.herramienta.getImage("Images\\youWSpoon.png");
+			vista.you 	 = vista.herramienta.getImage("Images\\youWSpoon.png");
 
 			hasSpoon = true;
 		}
