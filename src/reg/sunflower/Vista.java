@@ -17,7 +17,7 @@ public class Vista extends Frame
 {
 	private static final long serialVersionUID = 1L;
 
-	TextArea txtEvent = new TextArea(3,140);
+	TextArea txtEvent = new TextArea(3,100);
 	TextArea txtOptions = new TextArea(4,30);
 
 	Image btnReplaceA, btnReplaceB, btnReplaceC;

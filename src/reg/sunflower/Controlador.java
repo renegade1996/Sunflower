@@ -720,7 +720,7 @@ public class Controlador implements WindowListener, MouseListener, KeyListener, 
 	private void miniGame()
 	{
 		//window
-		vista.txtOptions.setText("ATTENTION: You are at your limit.\nUse the KEYBOARD to move,\nGRAB your last spoon with INTRO,\nand run home.");
+		vista.txtOptions.setText("ATTENTION: You are at your limit.\nUse the KEYBOARD to move,\nGRAB your last spoon with ENTER,\nand run home.");
 
 		vista.gameOver = true; //so it doesn't paint the rect
 
