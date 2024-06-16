@@ -1,5 +1,5 @@
 # Sunflower
-This is a short game about hidden disabilities made to practice Java.
+This is a short game for Windows about hidden disabilities made to practice Java.
 
 Open the game Sunflower.jar
 
