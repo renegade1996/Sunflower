@@ -1,5 +1,6 @@
 # Sunflower
-This is a short game for Windows about hidden disabilities made to practice Java.
+This is a short game for Windows about hidden disabilities that I made to practice Java. 
+It's a bit complicated to figure out how it works, but not as much as it is to figure out how this life works when you're neurodivergent.
 
 Open the game Sunflower.jar
 
